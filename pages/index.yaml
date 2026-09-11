@@ -1,0 +1,7 @@
+title: This is the title of the page
+
+content:
+  - 
+    type: h1
+    text: This is a title
+  - This is a line
