@@ -21,12 +21,12 @@ def get_file_text(path:str) -> str:
 def get_component(text:str) -> str:
     file_path = f'{text}.yaml'
     try:
-        obj = get_yaml_object(file_path)
+        component = get_yaml_object(file_path)
     except:
         print(f'Couldn\'t find/parse yaml script at {file_path}')
         return f'<!-- Couldn\'t handle component {text} -->'
 
-    return get_file_text(f'component/{obj["file"]}')
+    return generate_component_text(component)
 
 def make_figure_html(element, figure_html):
     output = ''
@@ -65,7 +65,8 @@ def parse_content(content_list:list) -> str:
     return '\n'.join(content_elements)
 
 
-def generate_page_text(text:str, page:dict) -> str:
+def generate_component_text(page:dict) -> str:
+    text = get_file_text(f"template/{page['template']}.html")
     output_text = ""
     split_text = text.split(ARG_ESCAPE_STR)
     for i, s in enumerate(split_text):
@@ -81,12 +82,10 @@ def generate_page_text(text:str, page:dict) -> str:
     return output_text
 
 def generate_page_html(page:dict) -> None:
-    page_template = get_file_text('page_template.html')
-
-    final_page_text = generate_page_text(page_template, page)
+    final_page_text = generate_component_text(page)
     write_text_to_file(final_page_text, "output_page.html")
     
 
 if __name__ == '__main__':
-    page = get_yaml_object('pages/index.yaml')
+    page = get_yaml_object('component/index.yaml')
     generate_page_html(page)
