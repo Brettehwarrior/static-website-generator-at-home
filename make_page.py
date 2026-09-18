@@ -77,6 +77,8 @@ def generate_component_text(page:dict) -> str:
                 output_text += parse_content(page[s])
             elif s not in page:
                 output_text += f'<!-- Undefined page key {s} -->'
+            else:
+                output_text += page[s] # Assuming all vars are strings
         else:
             output_text += s
     return output_text
