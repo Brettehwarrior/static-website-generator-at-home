@@ -1,0 +1,9 @@
+template: page
+
+title: This is the about page
+
+content:
+  - 
+    type: h1
+    text: About
+  - This is the about page

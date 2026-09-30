@@ -1,0 +1,6 @@
+# This is a simple key:pair document defining the output pages
+# output_page_name: component_name
+# path/to/output_page_name: component_name (TODO)
+
+index: home_page
+about: about_page
