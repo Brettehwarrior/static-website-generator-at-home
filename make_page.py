@@ -1,5 +1,6 @@
 import yaml
 from pathlib import Path
+import shutil
 
 ARG_ESCAPE_STR = '%'
 
@@ -90,11 +91,36 @@ def generate_page_html(page:dict, output_path:str) -> None:
     final_page_text = generate_component_text(page)
     write_text_to_file(final_page_text, output_path)
 
+def copy_directory_contents(src_path:str, dest_path:str) -> None:
+    src = Path(src_path)
+    dest = Path(dest_path)
+    dest.mkdir(parents=True, exist_ok=True)
+    
+    for item in src.iterdir():
+        if item.is_dir():
+            shutil.copytree(item, dest / item.name, dirs_exist_ok=True)
+        else:
+            shutil.copy2(item, dest / item.name)
+
+
+def empty_directory(path: str) -> None:
+    """Remove all files and folders in a directory."""
+    target = Path(path)
+    
+    for item in target.iterdir():
+        if item.is_dir():
+            shutil.rmtree(item)
+        else:
+            item.unlink()
+
 def generate_website(pages: dict) -> None:
+    empty_directory('output')
+    copy_directory_contents('include', 'output')
     for page_name in pages:
         page_object = get_yaml_object(f'component/{pages[page_name]}.yaml')
         page_output_directory = "output"
         generate_page_html(page_object, f'{page_output_directory}/{page_name}.html')
+    
 
 if __name__ == '__main__':
     pages = get_yaml_object('pages.yaml')

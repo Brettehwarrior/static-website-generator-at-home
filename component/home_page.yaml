@@ -1,6 +1,7 @@
 template: page
 
 title: This is the title of the page
+style: [main]
 
 content:
   - 
