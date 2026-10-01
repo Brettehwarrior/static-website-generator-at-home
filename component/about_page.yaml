@@ -11,3 +11,5 @@ content:
   
   - type: component
     component: test_box
+    variables:
+      box_title: This is the About page override title

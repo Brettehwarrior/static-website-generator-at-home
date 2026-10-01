@@ -22,13 +22,16 @@ def get_file_text(path:str) -> str:
         text = f.read()
     return text
 
-def get_component(name:str) -> str:
+def get_component(name:str, variable_overrides:dict = {}) -> str:
     file_path = f'{name}.yaml'
     try:
         component = get_yaml_object(file_path)
     except:
         print(f'Couldn\'t find/parse yaml script at {file_path}')
         return f'<!-- Couldn\'t handle component {name} -->'
+
+    for var in variable_overrides:
+        component[var] = variable_overrides[var]
 
     return generate_component_text(component)
 
@@ -50,7 +53,8 @@ def parse_content(content_list:list) -> str:
             content_elements.append(f'<p>{element}</p>')
         else: # Special object
             if element['type'] == 'component':
-                component_html = get_component(f'component/{element["component"]}')
+                variable_overrides = element['variables']
+                component_html = get_component(f'component/{element["component"]}', variable_overrides)
                 content_elements.append(component_html)
             elif element['type'] == 'img':
                 content_elements.append(make_figure_html(element, f'<img src="{element['src']}" alt="{element['alt']}">'))
