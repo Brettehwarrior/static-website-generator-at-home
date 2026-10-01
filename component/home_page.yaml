@@ -7,3 +7,4 @@ content:
     type: h1
     text: This is a title
   - This is a line
+  - <a href="/about">About Page</a>

@@ -7,3 +7,4 @@ content:
     type: h1
     text: About
   - This is the about page
+  - <a href="/index">Home page</a>
