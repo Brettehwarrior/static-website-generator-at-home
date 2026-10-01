@@ -113,6 +113,8 @@ def copy_directory_contents(src_path:str, dest_path:str) -> None:
 def empty_directory(path: str) -> None:
     """Remove all files and folders in a directory."""
     target = Path(path)
+    if not target.exists():
+        return
     
     for item in target.iterdir():
         if item.is_dir():
