@@ -3,8 +3,11 @@ template: page
 title: This is the about page
 
 content:
-  - 
-    type: h1
+  - type: h1
     text: About
+    
   - This is the about page
   - <a href="/index">Home page</a>
+  
+  - type: component
+    component: test_box

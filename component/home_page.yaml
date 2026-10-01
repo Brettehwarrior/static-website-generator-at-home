@@ -1,11 +1,11 @@
 template: page
 
 title: This is the title of the page
-style: [main]
 
 content:
-  - 
-    type: h1
+  - type: h1
     text: This is a title
   - This is a line
   - <a href="/about">About Page</a>
+  - "Chuck Norris is the ghost in Paranormal Activity, when the guy went flying at the end, it was because Chuck Norris roundhouse kicked him Chuck Norris counted to infinity - twice. What was going through the minds of all of Chuck Norris' victims before they died? His shoe Chuck Norris invented Kentucky Fried Chicken's famous secret recipe, with eleven herbs and spices. But nobody ever mentions the twelfth ingredient: Fear. Chuck Norris uses pepper spray to spice up his steaks Chuck Norris is the only man to ever defeat a brick wall in a game of tennis. Chuck Norris doesn't wash his clothes, he disembowels them, Chuck Norris can win a game of Connect Four in only three moves. Chuck Norris once kicked a can of Pepsi so hard that it turned into Mountain Dew. Chuck Norris can lead a horse to water AND make it drink. Chuck Norris counted to infinity - twice, Remember the Soviet Union? They decided to quit after watching a DeltaForce marathon on Satellite TV."
+  - "A Handicapped parking sign does not signify that this spot is for handicapped people. It is actually in fact a warning, that the spot belongs to Chuck Norris and that you will be handicapped if you park there. When Chuck Norris plays Super Mario Bros., Princess Peach is in the first castle, Remember the Soviet Union? They decided to quit after watching a DeltaForce marathon on Satellite TV. "

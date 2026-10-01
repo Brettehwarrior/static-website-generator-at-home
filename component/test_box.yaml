@@ -1,0 +1,4 @@
+template: test_box
+
+box_title: This is the default box title
+box_content: This is the default box content

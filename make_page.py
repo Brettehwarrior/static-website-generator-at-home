@@ -22,13 +22,13 @@ def get_file_text(path:str) -> str:
         text = f.read()
     return text
 
-def get_component(text:str) -> str:
-    file_path = f'{text}.yaml'
+def get_component(name:str) -> str:
+    file_path = f'{name}.yaml'
     try:
         component = get_yaml_object(file_path)
     except:
         print(f'Couldn\'t find/parse yaml script at {file_path}')
-        return f'<!-- Couldn\'t handle component {text} -->'
+        return f'<!-- Couldn\'t handle component {name} -->'
 
     return generate_component_text(component)
 
@@ -49,7 +49,10 @@ def parse_content(content_list:list) -> str:
         if isinstance(element, str): # Ordinary paragraph
             content_elements.append(f'<p>{element}</p>')
         else: # Special object
-            if element['type'] == 'img':
+            if element['type'] == 'component':
+                component_html = get_component(f'component/{element["component"]}')
+                content_elements.append(component_html)
+            elif element['type'] == 'img':
                 content_elements.append(make_figure_html(element, f'<img src="{element['src']}" alt="{element['alt']}">'))
             elif element['type'] == 'iframe':
                 iframe_html = '<div class="iframe-embed-wrapper">\n'
