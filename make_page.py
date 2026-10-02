@@ -22,8 +22,8 @@ def get_file_text(path:str) -> str:
         text = f.read()
     return text
 
-def get_component(name:str, variable_overrides:dict = {}) -> str:
-    file_path = f'{name}.yaml'
+def get_component(name:str, input_directory:str, variable_overrides:dict = {}) -> str:
+    file_path = f'{input_directory}/{name}.yaml' # TODO: Don't include component/ in name
     try:
         component = get_yaml_object(file_path)
     except:
@@ -33,7 +33,7 @@ def get_component(name:str, variable_overrides:dict = {}) -> str:
     for var in variable_overrides:
         component[var] = variable_overrides[var]
 
-    return generate_component_text(component)
+    return generate_component_text(component, input_directory)
 
 def make_figure_html(element, figure_html):
     output = ''
@@ -54,7 +54,7 @@ def parse_object(object:any, html_tag_for_raw_string:str=None) -> str:
     
     if object['type'] == 'component':
         variable_overrides = object['variables']
-        component_html = get_component(f'component/{object["component"]}', variable_overrides)
+        component_html = get_component(f'component/{object["component"]}', input_directory, variable_overrides)
         return (component_html)
     
     if object['type'] == 'img':
@@ -86,14 +86,14 @@ def parse_object_list(content_list:list) -> str:
     return '\n'.join(content_elements)
 
 
-def generate_component_text(page:dict) -> str:
-    text = get_file_text(f"template/{page['template']}.html")
+def generate_component_text(page:dict, input_directory:str) -> str:
+    text = get_file_text(f"{input_directory}/template/{page['template']}.html")
     output_text = ""
     split_text = text.split(ARG_ESCAPE_STR)
     for i, s in enumerate(split_text):
         if i % 2 == 1: # every other is an arg (assuming file doesn't start with arg)
             if s.startswith("component/"):
-                output_text += get_component(s)
+                output_text += get_component(s, input_directory)
             elif s == 'content':
                 output_text += parse_object_list(page[s])
             elif s not in page:
@@ -104,8 +104,8 @@ def generate_component_text(page:dict) -> str:
             output_text += s
     return output_text
 
-def generate_page_html(page:dict, output_path:str) -> None:
-    final_page_text = generate_component_text(page)
+def generate_page_html(page:dict, input_directory:str, output_path:str) -> None:
+    final_page_text = generate_component_text(page, input_directory)
     write_text_to_file(final_page_text, output_path)
 
 def copy_directory_contents(src_path:str, dest_path:str) -> None:
@@ -132,15 +132,16 @@ def empty_directory(path: str) -> None:
         else:
             item.unlink()
 
-def generate_website(pages: dict) -> None:
-    empty_directory('output')
-    copy_directory_contents('include', 'output')
+def generate_website(input_directory: str, output_directory) -> None:
+    pages = get_yaml_object(f'{input_directory}/pages.yaml')
+    empty_directory(output_directory)
+    copy_directory_contents(f'{input_directory}/include', output_directory)
     for page_name in pages:
-        page_object = get_yaml_object(f'component/{pages[page_name]}.yaml')
-        page_output_directory = "output"
-        generate_page_html(page_object, f'{page_output_directory}/{page_name}.html')
+        page_object = get_yaml_object(f'{input_directory}/component/{pages[page_name]}.yaml')
+        generate_page_html(page_object, input_directory, f'{output_directory}/{page_name}.html')
     
 
 if __name__ == '__main__':
-    pages = get_yaml_object('pages.yaml')
-    generate_website(pages)
+    input_directory = 'input'
+    output_directory = 'output'
+    generate_website(input_directory, output_directory)
