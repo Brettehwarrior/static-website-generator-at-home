@@ -46,33 +46,43 @@ def make_figure_html(element, figure_html):
     output += '</figure>'
     return output
 
-def parse_content(content_list:list) -> str:
+def parse_object(object:any, html_tag_for_raw_string:str=None) -> str:
+    if isinstance(object, str): # Just text
+        if html_tag_for_raw_string:
+            return f'<{html_tag_for_raw_string}>{object}</{html_tag_for_raw_string}>'
+        return object
+    
+    if object['type'] == 'component':
+        variable_overrides = object['variables']
+        component_html = get_component(f'component/{object["component"]}', variable_overrides)
+        return (component_html)
+    
+    if object['type'] == 'img':
+        return (make_figure_html(object, f'<img src="{object['src']}" alt="{element['alt']}">'))
+    
+    if object['type'] == 'iframe':
+        iframe_html = '<div class="iframe-embed-wrapper">\n'
+        iframe_html += f'<iframe src="{object['src']}" frameborder="0" allowfullscreen></iframe>'
+        iframe_html += '\n</div>'
+        return (make_figure_html(object, iframe_html))
+    
+    if object['type'] == 'video':
+        video_html = '<video controls>'
+        for source in object['sources']:
+            video_html += f'<source src="{source['src']}" type="{source['type']}">'
+        video_html += 'Your browser does not support video playback.</video>'
+        return (make_figure_html(object, video_html))
+    
+    if object['type'][0] == 'h' and len(object['type']) == 2: # Headings h1, h2, etc.
+        return (f'<{object['type']}>{object['text']}</{object['type']}>')
+    
+    print(f'Warning: Unrecognized object type "{object['type']}"')
+    return f"<!-- Couldn't parse type {object['type']} -->"
+
+def parse_object_list(content_list:list) -> str:
     content_elements = []
     for element in content_list:
-        if isinstance(element, str): # Ordinary paragraph
-            content_elements.append(f'<p>{element}</p>')
-        else: # Special object
-            if element['type'] == 'component':
-                variable_overrides = element['variables']
-                component_html = get_component(f'component/{element["component"]}', variable_overrides)
-                content_elements.append(component_html)
-            elif element['type'] == 'img':
-                content_elements.append(make_figure_html(element, f'<img src="{element['src']}" alt="{element['alt']}">'))
-            elif element['type'] == 'iframe':
-                iframe_html = '<div class="iframe-embed-wrapper">\n'
-                iframe_html += f'<iframe src="{element['src']}" frameborder="0" allowfullscreen></iframe>'
-                iframe_html += '\n</div>'
-                content_elements.append(make_figure_html(element, iframe_html))
-            elif element['type'] == 'video':
-                video_html = '<video controls>'
-                for source in element['sources']:
-                    video_html += f'<source src="{source['src']}" type="{source['type']}">'
-                video_html += 'Your browser does not support video playback.</video>'
-                content_elements.append(make_figure_html(element, video_html))
-            elif element['type'][0] == 'h' and len(element['type']) == 2: # Headings h1, h2, etc.
-                content_elements.append(f'<{element['type']}>{element['text']}</{element['type']}>')
-            else:
-                print(f'Warning: Unrecognized element type "{element['type']}"')
+        content_elements.append(parse_object(element, 'p')) # Strings in lists are paragraphs
     return '\n'.join(content_elements)
 
 
@@ -85,11 +95,11 @@ def generate_component_text(page:dict) -> str:
             if s.startswith("component/"):
                 output_text += get_component(s)
             elif s == 'content':
-                output_text += parse_content(page[s])
+                output_text += parse_object_list(page[s])
             elif s not in page:
                 output_text += f'<!-- Undefined page key {s} -->'
             else:
-                output_text += page[s] # Assuming all vars are strings
+                output_text += parse_object(page[s])
         else:
             output_text += s
     return output_text

@@ -16,10 +16,10 @@ Project is still quite WIP so expect this to change and for this readme to be be
 
 Templates are html files that exist in the source `template` directory. They define the layout of components. Components must specify a template to be used.
 
-Templates specify where component variables are used in the page. Any string within enclosed `%` characters are treated as a variable (haven't added delimiter yet).
+Templates specify where component variables are used in the page. Any string within enclosed `%` characters are treated as a variable (haven't added escape character yet).
 
 - For example, `%title%` can be written within an HTML head like `<title>%title%</title>`
-- If a variable starts with `component`, like `component/header`, then that component will replace that text (very likely to change since components themselves can more usefully declare usage of components)
+- If a variable starts with `component`, like `component/header`, then that component will replace that text (with default variable values if any, maybe I'll add variables to templates but this is already complex enough for me no?)
 
 `%content%` is a special variable that is populated a little differently, see Components
 
@@ -30,8 +30,13 @@ Components are `.yaml` files in the source `component` directory. They define th
 Variables are defined in the component YAML file as root key-pair values.
 
 - The `template` key is required, and points to an HTML file in the `template` directory
-- The `content` variable is treated specially. Instead of a string, a list is expected. That list can contain strings, which become `<p>` blocks, and objects, which differ even further depending on the `type` value defined in that object. I'll document it all someday I'm sure
-  - The `component` type within content must have `component` defined (target component to add), and must have `variables` defined (overrides the default variables of that component)
+- All other keys are treated as variables, and are parsed into templates according to a few rules.
+  1. String values will simply parse as its string value
+  2. Objects with a `type` key will be treated differently depending on the type.
+    - I gotta document the types still and it's definitely something that will arbitrarily grow
+    - The `component` type within content must have `component` defined (target component to add), and can have `variables` defined (overrides the default variables of that component)
+  3. Arrays will fill in instances of strings and objects just like `1.` and `2.`, except strings will be treated as paragraph blocks. This is useful for filling normal page content
+
 
 There's definitely a way to consolidate some of this down consistently, I think I want the ability to have multiple "content" sections in a template instead of having a reserved keyword. 
 
