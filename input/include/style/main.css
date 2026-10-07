@@ -3,3 +3,11 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
 }
+
+.green-bg {
+    background-color: greenyellow;
+}
+
+.red-text {
+    color: red;
+}

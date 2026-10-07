@@ -1,4 +1,5 @@
 template: test_box
 
+classes: green-bg red-text
 box_title: This is the default box title
 box_content: This is the default box content
