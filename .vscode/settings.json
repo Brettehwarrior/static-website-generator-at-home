@@ -1,0 +1,12 @@
+{
+    "emeraldwalk.runonsave": {
+
+        "commands": [
+            {
+                "match": ".*",
+                "isAsync": true,
+                "cmd": "python ./main.py"
+            }
+        ]
+    }
+}
