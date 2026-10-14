@@ -47,6 +47,9 @@ def make_figure_html(element, figure_html):
     return output
 
 def parse_object(object:any, html_tag_for_raw_string:str=None) -> str:
+    if isinstance(object, list):
+        output_text += parse_object_list(object)
+
     if isinstance(object, str): # Just text
         if html_tag_for_raw_string:
             return f'<{html_tag_for_raw_string}>{object}</{html_tag_for_raw_string}>'
@@ -58,7 +61,7 @@ def parse_object(object:any, html_tag_for_raw_string:str=None) -> str:
         return (component_html)
     
     if object['type'] == 'img':
-        return (make_figure_html(object, f'<img src="{object['src']}" alt="{element['alt']}">'))
+        return (make_figure_html(object, f'<img src="{object['src']}" alt="{object['alt']}">'))
     
     if object['type'] == 'iframe':
         iframe_html = '<div class="iframe-embed-wrapper">\n'
@@ -94,7 +97,9 @@ def generate_component_text(page:dict, input_directory:str) -> str:
         if i % 2 == 1: # every other is an arg (assuming file doesn't start with arg)
             if s.startswith("component/"):
                 output_text += get_component(s, input_directory)
-            elif s == 'content':
+            elif s not in page:
+                continue 
+            elif isinstance(page[s], list):
                 output_text += parse_object_list(page[s])
             elif s not in page:
                 output_text += f'<!-- Undefined page key {s} -->'

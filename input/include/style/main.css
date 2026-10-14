@@ -12,15 +12,15 @@ body {
     color: red;
 }
 
-nav ul {
+.header-nav ul {
     text-align: center;
 }
-nav li {
+.header-nav li {
     display: inline-block;
     margin-left: 0.25em;
     margin-right: 0.25em;
 }
-nav a {
+.header-nav a {
     font-weight: 600;
     text-decoration: none;
     padding: 0.4em 0.6em;
