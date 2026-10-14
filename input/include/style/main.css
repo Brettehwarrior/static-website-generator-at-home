@@ -26,3 +26,16 @@ body {
     padding: 0.4em 0.6em;
     background-color: aqua;
 }
+
+.content {
+    margin: 2em 15vw;
+}
+.content-inner {
+    padding: 2em;
+}
+
+@media only screen and (max-width: 900px) { /* Mobile view */
+    .content {
+        margin: 2em;
+    }
+}
