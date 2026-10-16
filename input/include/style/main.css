@@ -60,6 +60,6 @@ header {
 
 @media only screen and (max-width: 900px) { /* Mobile view */
     .content {
-        margin: 2em;
+        margin: 1em;
     }
 }
